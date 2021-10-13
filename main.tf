@@ -1,6 +1,6 @@
-# Title: aws-fnbo-connect-instance terraform module
+# Title: aws-tf-amazon-connect terraform module
 terraform {
-  required_providers { #https://www.terraform.io/docs/language/modules/develop/providers.html
+  required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = ">= 3.60.0"
