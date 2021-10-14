@@ -234,10 +234,6 @@ resource "aws_kms_alias" "connect" {
 resource "aws_s3_bucket" "firehose" {
   bucket = "amazon-connect-${var.connect-instance-alias}-${data.aws_caller_identity.current.account_id}-firehose-${data.aws_region.current.name}"
   acl    = "private"
-  logging {
-    target_bucket = "fnbo-${data.aws_caller_identity.current.account_id}-s3-accesslogs-${data.aws_region.current.name}"
-    target_prefix = "connect-${var.connect-instance-alias}/"
-  }
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
