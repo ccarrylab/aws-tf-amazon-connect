@@ -220,12 +220,12 @@ data "aws_iam_policy_document" "connect_key_policy" {
     }
   }
 }
-resource "aws_kms_grant" "connect" {
-  key_id            = aws_kms_key.connect.key_id
-  grantee_principal = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/macie.amazonaws.com/AWSServiceRoleForAmazonMacie"
-  operations        = ["Decrypt"]
-  name              = "macie"
-}
+# resource "aws_kms_grant" "connect" {
+#   key_id            = aws_kms_key.connect.key_id
+#   grantee_principal = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/macie.amazonaws.com/AWSServiceRoleForAmazonMacie"
+#   operations        = ["Decrypt"]
+#   name              = "macie"
+# }
 resource "aws_kms_alias" "connect" {
   name          = "alias/${var.connect-instance-alias}/connect-cmk"
   target_key_id = aws_kms_key.connect.key_id
