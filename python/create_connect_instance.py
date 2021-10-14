@@ -14,4 +14,4 @@ response = connect.create_instance(
     InboundCallsEnabled=True,
     OutboundCallsEnabled=True
 )
-print(json.dumps(response))
+print(json.dumps(response['Id']))
