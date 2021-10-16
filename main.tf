@@ -314,3 +314,9 @@ resource "aws_iam_role" "firehose" {
     }]
   })
 }
+resource "aws_connect_instance" "connect" {
+  identity_management_type = "CONNECT_MANAGED"
+  inbound_calls_enabled    = true
+  instance_alias           = var.connect-instance-alias
+  outbound_calls_enabled   = true
+}
