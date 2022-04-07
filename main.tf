@@ -3,7 +3,7 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 3.60.0"
+      version = ">= 4.0"
     }
   }
 }
@@ -12,26 +12,17 @@ data "aws_region" "current" {}
 # data storage configuration resources
 resource "aws_s3_bucket" "connect" {
   bucket = "amazon-connect-${var.connect-instance-alias}-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
-  acl    = "private"
 
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
   tags = {
     ConnectInstanceAlias = var.connect-instance-alias
   }
-  versioning {
-    enabled = true
-  }
+
+}
+resource "aws_s3_bucket_acl" "connect" {
+  bucket = aws_s3_bucket.connect.id
+  acl    = "private"
 }
 resource "aws_s3_bucket_policy" "connect" {
-  depends_on = [
-    aws_s3_bucket_public_access_block.connect
-  ]
   bucket = aws_s3_bucket.connect.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -61,6 +52,21 @@ resource "aws_s3_bucket_public_access_block" "connect" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+resource "aws_s3_bucket_server_side_encryption_configuration" "connect" {
+  bucket = aws_s3_bucket.connect.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+resource "aws_s3_bucket_versioning" "connect" {
+  bucket = aws_s3_bucket.connect.id
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 resource "aws_kms_key" "connect" {
   description             = "${var.connect-instance-alias}-${data.aws_region.current.name} Amazon Connect Key"
@@ -233,25 +239,17 @@ resource "aws_kms_alias" "connect" {
 # data streaming configuration resources
 resource "aws_s3_bucket" "firehose" {
   bucket = "amazon-connect-${var.connect-instance-alias}-${data.aws_caller_identity.current.account_id}-firehose-${data.aws_region.current.name}"
-  acl    = "private"
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
-  }
+
   tags = {
     ConnectInstanceAlias = var.connect-instance-alias
   }
-  versioning {
-    enabled = true
-  }
+
+}
+resource "aws_s3_bucket_acl" "firehose" {
+  bucket = aws_s3_bucket.firehose.id
+  acl    = "private"
 }
 resource "aws_s3_bucket_policy" "firehose" {
-  depends_on = [
-    aws_s3_bucket_public_access_block.firehose
-  ]
   bucket = aws_s3_bucket.firehose.id
   policy = jsonencode({
     Version = "2012-10-17"
@@ -281,6 +279,21 @@ resource "aws_s3_bucket_public_access_block" "firehose" {
   block_public_policy     = true
   ignore_public_acls      = true
   restrict_public_buckets = true
+}
+resource "aws_s3_bucket_server_side_encryption_configuration" "firehose" {
+  bucket = aws_s3_bucket.firehose.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+  }
+}
+resource "aws_s3_bucket_versioning" "firehose" {
+  bucket = aws_s3_bucket.firehose.id
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 resource "aws_kinesis_firehose_delivery_stream" "firehose" {
   name        = "${var.connect-instance-alias}-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}-firehose-stream"
