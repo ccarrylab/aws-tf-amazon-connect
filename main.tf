@@ -241,7 +241,7 @@ resource "aws_s3_bucket" "firehose" {
   bucket = "amazon-connect-${var.connect-instance-alias}-${data.aws_caller_identity.current.account_id}-firehose-${data.aws_region.current.name}"
 
   tags = {
-    ConnectInstanceAlias = var.connect-instance-alias1
+    ConnectInstanceAlias = var.connect-instance-alias
   }
 
 }
@@ -310,7 +310,7 @@ resource "aws_kinesis_firehose_delivery_stream" "firehose" {
     }
   }
   tags = {
-    ConnectInstanceAlias = var.connect-instance-alias1
+    ConnectInstanceAlias = var.connect-instance-alias
   }
 }
 resource "aws_iam_role" "firehose" {
@@ -330,7 +330,7 @@ resource "aws_iam_role" "firehose" {
 resource "aws_connect_instance" "connect041981" {
   identity_management_type = "CONNECT_MANAGED"
   inbound_calls_enabled    = true
-  instance_alias           = var.connect-instance-alias1
+  instance_alias           = var.connect-instance-alias
   outbound_calls_enabled   = true
 }
 
