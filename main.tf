@@ -68,7 +68,7 @@ resource "aws_s3_bucket_versioning" "connect" {
     status = "Enabled"
   }
 }
-resource "aws_kms_key" "_connect" {
+resource "aws_kms_key" "connect" {
   description             = "${var.connect-instance-alias}-${data.aws_region.current.name} Amazon Connect Key"
   deletion_window_in_days = 30
   enable_key_rotation     = true
@@ -234,7 +234,7 @@ data "aws_iam_policy_document" "connect_key_policy" {
 # }
 resource "aws_kms_alias" "connect" {
   name          = "alias/${var.connect-instance-alias}/connect-cmk"
-  target_key_id = "connect"
+   target_key_id = aws_kms_key.connect.key_id
 }
 # data streaming configuration resources
 resource "aws_s3_bucket" "firehose" {
@@ -327,7 +327,7 @@ resource "aws_iam_role" "firehose" {
     }]
   })
 }
-resource "aws_connect_instance" "_connect" {
+resource "aws_connect_instance" "connect0410" {
   identity_management_type = "CONNECT_MANAGED"
   inbound_calls_enabled    = true
   instance_alias           = var.connect-instance-alias
