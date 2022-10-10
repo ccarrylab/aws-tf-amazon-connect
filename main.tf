@@ -68,7 +68,7 @@ resource "aws_s3_bucket_versioning" "connect" {
     status = "Enabled"
   }
 }
-resource "aws_kms_key" "connect1980" {
+resource "aws_kms_key" "connect" {
   description             = "${var.connect-instance-alias}-${data.aws_region.current.name} Amazon Connect Key"
   deletion_window_in_days = 30
   enable_key_rotation     = true
