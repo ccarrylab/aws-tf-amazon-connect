@@ -234,7 +234,7 @@ data "aws_iam_policy_document" "connect_key_policy" {
 # }
 resource "aws_kms_alias" "connect" {
   name          = "alias/${var.connect-instance-alias}/connect-cmk"
-  target_key_id = aws_kms_key.connect.key_id
+ # target_key_id = aws_kms_key.connect.key_id
 }
 # data streaming configuration resources
 resource "aws_s3_bucket" "firehose" {
