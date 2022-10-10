@@ -68,7 +68,7 @@ resource "aws_s3_bucket_versioning" "connect" {
     status = "Enabled"
   }
 }
-resource "aws_kms_key" "connect" {
+resource "aws_kms_key" "connect1980" {
   description             = "${var.connect-instance-alias}-${data.aws_region.current.name} Amazon Connect Key"
   deletion_window_in_days = 30
   enable_key_rotation     = true
@@ -327,9 +327,10 @@ resource "aws_iam_role" "firehose" {
     }]
   })
 }
-resource "aws_connect_instance" "connect1" {
+resource "aws_connect_instance" "connect1980" {
   identity_management_type = "CONNECT_MANAGED"
   inbound_calls_enabled    = true
   instance_alias           = var.connect-instance-alias
   outbound_calls_enabled   = true
 }
+
